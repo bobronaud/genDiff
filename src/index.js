@@ -1,13 +1,18 @@
 import _ from 'lodash';
-import { readFileSync } from 'node:fs';
 import path from 'node:path';
+import parse from './parsers';
+
+const isValidExtension = (filepath) => {
+  const validExtensions = ['.json', '.yaml', '.yml'];
+  return validExtensions.includes(path.extname(filepath));
+};
 
 const genDiff = (filepath1, filepath2) => {
-  if (!filepath1.endsWith('json') || !filepath2.endsWith('json')) {
-    return 'Error: file is not .json extension';
+  if (!isValidExtension(filepath1) || !isValidExtension(filepath2)) {
+    return 'Error: file is not valid exnatsion';
   }
-  const file1 = JSON.parse(readFileSync(path.resolve(filepath1), 'utf-8'));
-  const file2 = JSON.parse(readFileSync(path.resolve(filepath2), 'utf-8'));
+  const file1 = parse(filepath1);
+  const file2 = parse(filepath2);
   const sortedAllKeys = _.union(_.keys(file1), _.keys(file2)).sort();
   const result = sortedAllKeys.reduce((diff, key) => {
     if (!Object.hasOwn(file1, key)) {

@@ -12,4 +12,6 @@ const readFile = (filename) => readFileSync(getFixturePath(filename), 'utf-8');
 
 test('flat objects', () => {
   expect(genDiff(getFixturePath('file1.json'), getFixturePath('file2.json'))).toEqual(readFile('genDiffResult.txt'));
+  expect(genDiff(getFixturePath('file1.yml'), getFixturePath('file2.yml'))).toEqual(readFile('genDiffResult.txt'));
+  expect(genDiff(getFixturePath('file1.yaml'), getFixturePath('file2.yaml'))).toEqual(readFile('genDiffResult.txt'));
 });
