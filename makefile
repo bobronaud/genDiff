@@ -6,3 +6,5 @@ test:
 	npx jest
 install:
 	npm ci
+test-coverage:
+	npx jest --coverage
