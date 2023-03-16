@@ -3,16 +3,16 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3.0.0
-      - uses: actions/setup-node@v3.0.0
-      - run: make install
-      - run: make lint
-      - run: make test
-      - name: test and publish code coverage
-      uses: paambaati/codeclimate-action@v3.0.0
-      env:
-      CODECLIMATE_TEST_COVERAGE: ${{ secrets.CODECLIMATE_TEST_COVERAGE }}
-      with:
-      coverageCommand: make test-coverage
-      debug: true
+steps:
+  - uses: actions/checkout@v3.0.0
+- uses: actions/setup-node@v3.0.0
+- run: make install
+- run: make lint
+- run: make test
+- name: test and publish code coverage
+  uses: paambaati/codeclimate-action@v3.0.0
+  env:
+    CODECLIMATE_TEST_COVERAGE: ${{ secrets.CODECLIMATE_TEST_COVERAGE }}
+  with:
+    coverageCommand: make test-coverage
+  debug: true
