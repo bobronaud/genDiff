@@ -3,21 +3,6 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
-<<<<<<< HEAD
-steps:
-  - uses: actions/checkout@v3.0.0
-- uses: actions/setup-node@v3.0.0
-- run: make install
-- run: make lint
-- run: make test
-- name: test and publish code coverage
-  uses: paambaati/codeclimate-action@v3.0.0
-  env:
-    CODECLIMATE_TEST_COVERAGE: ${{ secrets.CODECLIMATE_TEST_COVERAGE }}
-  with:
-    coverageCommand: make test-coverage
-  debug: true
-=======
     steps:
       - uses: actions/checkout@v3.0.0
       - uses: actions/setup-node@v3.0.0
@@ -30,4 +15,3 @@ steps:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
           coverageCommand: make test-coverage
->>>>>>> 1781062 (add test-coverage)
