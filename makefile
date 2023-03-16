@@ -7,4 +7,4 @@ test:
 install:
 	npm ci
 test-coverage:
-	npx jest --coverage
+	npm test -- --coverage
