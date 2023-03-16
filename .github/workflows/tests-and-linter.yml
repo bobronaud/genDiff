@@ -1,0 +1,11 @@
+name: tests-and-linter
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: action/checkout@v3.0.0
+      - uses: action/setup-node@v3.0.0
+      - run: make install
+      - run: make lint
+      - run: make test
