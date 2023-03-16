@@ -6,6 +6,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3.0.0
       - uses: actions/setup-node@v3.0.0
+      with:
+      node-version: 18.x
       - run: make install
       - run: make lint
       - run: make test
