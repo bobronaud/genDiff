@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import path from 'node:path';
-import parse from './parsers';
+import parse from './parsers.js';
 
 const isValidExtension = (filepath) => {
   const validExtensions = ['.json', '.yaml', '.yml'];

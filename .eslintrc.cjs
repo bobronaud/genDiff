@@ -14,5 +14,6 @@ module.exports = {
     'no-console': 0,
     'no-underscore-dangle': [2, { allow: ['__filename', '__dirname'] }],
     'no-param-reassign': 0,
+    'import/extensions': 0,
   },
 };
