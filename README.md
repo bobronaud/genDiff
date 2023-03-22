@@ -5,4 +5,4 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/c070aea8963d28ad8455/test_coverage)](https://codeclimate.com/github/Bobronaud/frontend-project-46/test_coverage)
 
 #### How to use package:
-[![asciicast](https://asciinema.org/a/msunwkmzVljRtYMzOu6PJ936T.svg)](https://asciinema.org/a/msunwkmzVljRtYMzOu6PJ936T)
+[![asciicast](https://asciinema.org/a/569123.svg)](https://asciinema.org/a/569123)
