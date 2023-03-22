@@ -3,7 +3,8 @@ import { dirname } from 'path';
 import path from 'node:path';
 import { readFileSync } from 'node:fs';
 import genDiff from '../src/index.js';
-import stylish from '../src/stylish.js';
+import stylish from '../src/formatters/stylish.js';
+import plain from '../src/formatters/plain.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,9 +14,15 @@ const readFile = (filename) => readFileSync(getFixturePath(filename), 'utf-8');
 
 const diffJson = genDiff(getFixturePath('file1-nested.json'), getFixturePath('file2-nested.json'));
 const diffYaml = genDiff(getFixturePath('file1-nested.yml'), getFixturePath('file2-nested.yml'));
-const expected = readFile('genDiffResult-nested.txt');
+const stylishFormatExpected = readFile('genDiffResult-nested-stylish.txt');
+const plainFormatExpected = readFile('genDiffResult-nested-plain.txt');
 
 test('nested objects', () => {
-  expect(stylish(diffJson)).toEqual(expected);
-  expect(stylish(diffYaml)).toEqual(expected);
+  expect(stylish(diffJson)).toEqual(stylishFormatExpected);
+  expect(stylish(diffYaml)).toEqual(stylishFormatExpected);
+});
+
+test('plain format', () => {
+  expect(plain(diffJson)).toEqual(plainFormatExpected);
+  expect(plain(diffYaml)).toEqual(plainFormatExpected);
 });
