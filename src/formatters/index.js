@@ -5,6 +5,9 @@ import json from './json.js';
 
 const diff = (filepath1, filepath2, formatName = 'stylish') => {
   switch (formatName) {
+    case !formatName: {
+      return stylish(genDiff(filepath1, filepath2));
+    }
     case 'stylish': {
       return stylish(genDiff(filepath1, filepath2));
     }

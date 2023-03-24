@@ -69,7 +69,6 @@ const genDiff = (filepath1, filepath2) => {
     }, []);
     return result;
   };
-  // console.dir(iter(firstFile, secondFile), { depth: null });
   return iter(firstFile, secondFile);
 };
 
