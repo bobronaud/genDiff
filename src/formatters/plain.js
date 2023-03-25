@@ -1,14 +1,11 @@
 const normalizeValue = (value) => {
-  switch (value) {
-    case Array.isArray(value): {
-      return '[complex value]';
-    }
-    case typeof value === 'string': {
-      return value.length === 0 ? "''" : `'${value}'`;
-    }
-    default:
-      return value;
+  if (Array.isArray(value)) {
+    return '[complex value]';
   }
+  if (typeof value === 'string') {
+    return value.length === 0 ? "''" : `'${value}'`;
+  }
+  return value;
 };
 
 const plain = (tree) => {
