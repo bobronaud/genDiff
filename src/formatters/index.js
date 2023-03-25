@@ -1,24 +1,20 @@
-import genDiff from '../index.js';
 import stylish from './stylish.js';
 import plain from './plain.js';
 import json from './json.js';
 
-const diff = (filepath1, filepath2, formatName = 'stylish') => {
+const formatting = (tree, formatName) => {
   switch (formatName) {
-    case !formatName: {
-      return stylish(genDiff(filepath1, filepath2));
-    }
     case 'stylish': {
-      return stylish(genDiff(filepath1, filepath2));
+      return stylish(tree);
     }
     case 'plain': {
-      return plain(genDiff(filepath1, filepath2));
+      return plain(tree);
     }
     case 'json': {
-      return json(genDiff(filepath1, filepath2));
+      return json(tree);
     }
     default:
       throw Error(`${formatName} is not found`);
   }
 };
-export default diff;
+export default formatting;
