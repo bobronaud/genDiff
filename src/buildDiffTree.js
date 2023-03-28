@@ -7,16 +7,14 @@ const isValidExtension = (filepath) => {
   return validExtensions.includes(path.extname(filepath));
 };
 
-const buildValue = (value) => {
-  if (!_.isObject(value)) {
-    return value;
+const buildValue = (buildedValue) => {
+  if (!_.isObject(buildedValue)) {
+    return buildedValue;
   }
-  const entries = Object.entries(value);
+  const entries = Object.entries(buildedValue);
   const result = entries.reduce((acc, [key, newValue]) => {
-    const node = {};
-    node.key = key;
-    node.value = _.isObject(newValue) ? buildValue(newValue) : newValue;
-    return [...acc, node];
+    const value = _.isObject(newValue) ? buildValue(newValue) : newValue;
+    return [...acc, { key, value }];
   }, []);
   return result;
 };
@@ -33,37 +31,31 @@ const buildDiffTree = (filepath1, filepath2) => {
     const result = sortedAllKeys.reduce((diff, key) => {
       const value1 = file1[key];
       const value2 = file2[key];
-      const node = {};
       if (_.isObject(value1) && _.isObject(value2)) {
-        node.key = key;
-        node.status = 'unchanged';
-        node.value = iter(value1, value2);
-        return [...diff, node];
+        const status = 'unchanged';
+        const value = iter(value1, value2);
+        return [...diff, { key, status, value }];
       }
       if (!Object.hasOwn(file1, key)) {
-        node.key = key;
-        node.status = 'added';
-        node.value = buildValue(value2);
-        return [...diff, node];
+        const status = 'added';
+        const value = buildValue(value2);
+        return [...diff, { key, status, value }];
       }
       if (!Object.hasOwn(file2, key)) {
-        node.key = key;
-        node.status = 'removed';
-        node.value = buildValue(value1);
-        return [...diff, node];
+        const status = 'removed';
+        const value = buildValue(value1);
+        return [...diff, { key, status, value }];
       }
       if (value1 !== value2) {
-        node.key = key;
-        node.status = 'changed';
+        const status = 'changed';
         const oldValue = buildValue(value1);
         const newValue = buildValue(value2);
-        node.value = { oldValue, newValue };
-        return [...diff, node];
+        const value = { oldValue, newValue };
+        return [...diff, { key, status, value }];
       }
-      node.key = key;
-      node.status = 'unchanged';
-      node.value = buildValue(value1);
-      return [...diff, node];
+      const status = 'unchanged';
+      const value = buildValue(value1);
+      return [...diff, { key, status, value }];
     }, []);
     return result;
   };
