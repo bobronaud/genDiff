@@ -14,25 +14,20 @@ const plain = (tree) => {
       const path = parent ? `${parent}.${key}` : key;
       switch (status) {
         case 'added': {
-          str = `${str}Property '${path}' was added with value: ${normalizeValue(value)}\n`;
-          break;
+          return `${str}Property '${path}' was added with value: ${normalizeValue(value)}\n`;
         }
         case 'removed': {
-          str = `${str}Property '${path}' was removed\n`;
-          break;
+          return `${str}Property '${path}' was removed\n`;
         }
         case 'changed': {
-          str = `${str}Property '${path}' was updated. From ${normalizeValue(value.oldValue)} to ${normalizeValue(value.newValue)}\n`;
-          break;
+          return `${str}Property '${path}' was updated. From ${normalizeValue(value.oldValue)} to ${normalizeValue(value.newValue)}\n`;
         }
         case 'unchanged': {
-          str = Array.isArray(value) ? `${str}${iter(value, path)}` : str;
-          break;
+          return Array.isArray(value) ? `${str}${iter(value, path)}` : str;
         }
         default:
           throw Error(`${status} is not fount`);
       }
-      return str;
     }, '');
     return result;
   };
