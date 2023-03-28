@@ -14,10 +14,9 @@ const buildValue = (value) => {
   const entries = Object.entries(value);
   const result = entries.reduce((acc, [key, newValue]) => {
     const node = {};
-    acc.push(node);
     node.key = key;
     node.value = _.isObject(newValue) ? buildValue(newValue) : newValue;
-    return acc;
+    return [...acc, node];
   }, []);
   return result;
 };
@@ -30,29 +29,28 @@ const buildDiffTree = (filepath1, filepath2) => {
   const secondFile = parse(filepath2);
 
   const iter = (file1, file2) => {
-    const sortedAllKeys = _.union(_.keys(file1), _.keys(file2)).sort();
+    const sortedAllKeys = _.sortBy(_.union(_.keys(file1), _.keys(file2)));
     const result = sortedAllKeys.reduce((diff, key) => {
       const value1 = file1[key];
       const value2 = file2[key];
       const node = {};
-      diff.push(node);
       if (_.isObject(value1) && _.isObject(value2)) {
         node.key = key;
         node.status = 'unchanged';
         node.value = iter(value1, value2);
-        return diff;
+        return [...diff, node];
       }
       if (!Object.hasOwn(file1, key)) {
         node.key = key;
         node.status = 'added';
         node.value = buildValue(value2);
-        return diff;
+        return [...diff, node];
       }
       if (!Object.hasOwn(file2, key)) {
         node.key = key;
         node.status = 'removed';
         node.value = buildValue(value1);
-        return diff;
+        return [...diff, node];
       }
       if (value1 !== value2) {
         node.key = key;
@@ -60,12 +58,12 @@ const buildDiffTree = (filepath1, filepath2) => {
         const oldValue = buildValue(value1);
         const newValue = buildValue(value2);
         node.value = { oldValue, newValue };
-        return diff;
+        return [...diff, node];
       }
       node.key = key;
       node.status = 'unchanged';
       node.value = buildValue(value1);
-      return diff;
+      return [...diff, node];
     }, []);
     return result;
   };
