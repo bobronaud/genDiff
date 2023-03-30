@@ -22,8 +22,11 @@ const plain = (tree) => {
         case 'changed': {
           return `${str}Property '${path}' was updated. From ${normalizeValue(value.oldValue)} to ${normalizeValue(value.newValue)}\n`;
         }
+        case 'nested': {
+          return `${str}${iter(value, path)}`;
+        }
         case 'unchanged': {
-          return Array.isArray(value) ? `${str}${iter(value, path)}` : str;
+          return str;
         }
         default:
           throw Error(`${status} is not fount`);
