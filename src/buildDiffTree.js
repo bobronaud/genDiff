@@ -19,10 +19,9 @@ const buildValue = (buildedValue) => {
 const buildDiffTree = (filepath1, filepath2) => {
   const firstObj = buildObject(filepath1);
   const secondObj = buildObject(filepath2);
-
   const iter = (obj1, obj2) => {
     const sortedAllKeys = _.sortBy(_.union(_.keys(obj1), _.keys(obj2)));
-    const result = sortedAllKeys.reduce((diff, key) => {
+    return sortedAllKeys.reduce((diff, key) => {
       const value1 = obj1[key];
       const value2 = obj2[key];
       if (_.isObject(value1) && _.isObject(value2)) {
@@ -51,7 +50,6 @@ const buildDiffTree = (filepath1, filepath2) => {
       const value = buildValue(value1);
       return [...diff, { key, status, value }];
     }, []);
-    return result;
   };
   return iter(firstObj, secondObj);
 };
