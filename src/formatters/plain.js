@@ -13,21 +13,21 @@ const plain = (tree) => {
     const result = node.reduce((str, { key, status, value }) => {
       const path = parent ? `${parent}.${key}` : key;
       switch (status) {
-        case 'added': {
+        case 'added':
           return `${str}Property '${path}' was added with value: ${normalizeValue(value)}\n`;
-        }
-        case 'removed': {
+
+        case 'removed':
           return `${str}Property '${path}' was removed\n`;
-        }
-        case 'changed': {
+
+        case 'changed':
           return `${str}Property '${path}' was updated. From ${normalizeValue(value.oldValue)} to ${normalizeValue(value.newValue)}\n`;
-        }
-        case 'nested': {
+
+        case 'nested':
           return `${str}${iter(value, path)}`;
-        }
-        case 'unchanged': {
+
+        case 'unchanged':
           return str;
-        }
+
         default:
           throw Error(`${status} is not fount`);
       }

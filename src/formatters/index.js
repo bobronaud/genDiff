@@ -4,15 +4,15 @@ import json from './json.js';
 
 const formatting = (tree, formatName) => {
   switch (formatName) {
-    case 'stylish': {
+    case 'stylish':
       return stylish(tree);
-    }
-    case 'plain': {
+
+    case 'plain':
       return plain(tree);
-    }
-    case 'json': {
+
+    case 'json':
       return json(tree);
-    }
+
     default:
       throw Error(`${formatName} is not found`);
   }

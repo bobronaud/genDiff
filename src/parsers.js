@@ -4,15 +4,15 @@ import yaml from 'js-yaml';
 
 const parse = (filepath, extname) => {
   switch (extname) {
-    case '.json': {
+    case '.json':
       return JSON.parse(readFileSync(path.resolve(filepath), 'utf-8'));
-    }
-    case '.yml': {
+
+    case '.yml':
       return yaml.load(readFileSync(path.resolve(filepath), 'utf-8'));
-    }
-    case '.yaml': {
+
+    case '.yaml':
       return yaml.load(readFileSync(path.resolve(filepath), 'utf-8'));
-    }
+
     default:
       throw new Error('file is not valid exnatsion');
   }
