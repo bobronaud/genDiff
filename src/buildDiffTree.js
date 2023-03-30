@@ -2,10 +2,7 @@ import _ from 'lodash';
 import path from 'node:path';
 import parse from './parsers.js';
 
-const isValidExtension = (filepath) => {
-  const validExtensions = ['.json', '.yaml', '.yml'];
-  return validExtensions.includes(path.extname(filepath));
-};
+const buildObject = (filepath) => parse(filepath, path.extname(filepath));
 
 const buildValue = (buildedValue) => {
   if (!_.isObject(buildedValue)) {
@@ -20,28 +17,25 @@ const buildValue = (buildedValue) => {
 };
 
 const buildDiffTree = (filepath1, filepath2) => {
-  if (!isValidExtension(filepath1) || !isValidExtension(filepath2)) {
-    return 'Error: file is not valid exnatsion';
-  }
-  const firstFile = parse(filepath1);
-  const secondFile = parse(filepath2);
+  const firstObj = buildObject(filepath1);
+  const secondObj = buildObject(filepath2);
 
-  const iter = (file1, file2) => {
-    const sortedAllKeys = _.sortBy(_.union(_.keys(file1), _.keys(file2)));
+  const iter = (obj1, obj2) => {
+    const sortedAllKeys = _.sortBy(_.union(_.keys(obj1), _.keys(obj2)));
     const result = sortedAllKeys.reduce((diff, key) => {
-      const value1 = file1[key];
-      const value2 = file2[key];
+      const value1 = obj1[key];
+      const value2 = obj2[key];
       if (_.isObject(value1) && _.isObject(value2)) {
-        const status = 'unchanged';
+        const status = 'nested';
         const value = iter(value1, value2);
         return [...diff, { key, status, value }];
       }
-      if (!Object.hasOwn(file1, key)) {
+      if (!Object.hasOwn(obj1, key)) {
         const status = 'added';
         const value = buildValue(value2);
         return [...diff, { key, status, value }];
       }
-      if (!Object.hasOwn(file2, key)) {
+      if (!Object.hasOwn(obj2, key)) {
         const status = 'removed';
         const value = buildValue(value1);
         return [...diff, { key, status, value }];
@@ -59,7 +53,7 @@ const buildDiffTree = (filepath1, filepath2) => {
     }, []);
     return result;
   };
-  return iter(firstFile, secondFile);
+  return iter(firstObj, secondObj);
 };
 
 export default buildDiffTree;
