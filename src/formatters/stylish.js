@@ -1,28 +1,26 @@
+const sings = {
+  added: '+ ',
+  removed: '- ',
+  unchanged: '  ',
+  nested: '  ',
+  undefined: '  ',
+  // underfined is then, if node is plain and doesnt have any status
+};
+
+const replacer = ' ';
+const startIndent = (depth) => replacer.repeat(4 * depth - 2);
+const endIndent = (depth) => replacer.repeat(4 * depth);
+
 const stylish = (tree) => {
   const iter = (node, depth = 1) => {
     const result = node.reduce((diff, { key, status, value }) => {
-      switch (status) {
-        case 'added':
-          return Array.isArray(value)
-            ? `${diff}\n${' '.repeat(4 * depth - 2)}+ ${key}: {${iter(value, depth + 1)}\n${' '.repeat(4 * depth)}}`
-            : `${diff}\n${' '.repeat(4 * depth - 2)}+ ${key}: ${value}`;
-        case 'removed':
-          return Array.isArray(value)
-            ? `${diff}\n${' '.repeat(4 * depth - 2)}- ${key}: {${iter(value, depth + 1)}\n${' '.repeat(4 * depth)}}`
-            : `${diff}\n${' '.repeat(4 * depth - 2)}- ${key}: ${value}`;
-        case 'changed': {
-          const newDiff = Array.isArray(value.oldValue)
-            ? `${diff}\n${' '.repeat(4 * depth - 2)}- ${key}: {${iter(value.oldValue, depth + 1)}\n${' '.repeat(4 * depth)}}`
-            : `${diff}\n${' '.repeat(4 * depth - 2)}- ${key}: ${value.oldValue}`;
-          return Array.isArray(value.newValue)
-            ? `${newDiff}\n${' '.repeat(4 * depth - 2)}+ ${key}: {${iter(value.newValue, depth + 1)}\n${' '.repeat(4 * depth)}}`
-            : `${newDiff}\n${' '.repeat(4 * depth - 2)}+ ${key}: ${value.newValue}`;
-        }
-        default:
-          return Array.isArray(value)
-            ? `${diff}\n${' '.repeat(4 * depth)}${key}: {${iter(value, depth + 1)}\n${' '.repeat(4 * depth)}}`
-            : `${diff}\n${' '.repeat(4 * depth)}${key}: ${value}`;
+      const buildValue = (val) => (Array.isArray(val) ? `{${iter(val, depth + 1)}\n${endIndent(depth)}}` : val);
+      if (status === 'changed') {
+        return `${diff}\n${startIndent(depth)}${sings.removed}${key}: ${buildValue(value.oldValue)}\n${startIndent(depth)}${
+          sings.added
+        }${key}: ${buildValue(value.newValue)}`;
       }
+      return `${diff}\n${startIndent(depth)}${sings[status]}${key}: ${buildValue(value)}`;
     }, '');
     return result;
   };
