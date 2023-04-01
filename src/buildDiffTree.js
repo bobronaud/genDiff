@@ -25,30 +25,28 @@ const buildDiffTree = (filepath1, filepath2) => {
       const value1 = obj1[key];
       const value2 = obj2[key];
       if (_.isObject(value1) && _.isObject(value2)) {
-        const status = 'nested';
-        const value = iter(value1, value2);
-        return [...diff, { key, status, value }];
+        return [...diff, { key, status: 'nested', value: iter(value1, value2) }];
       }
       if (!Object.hasOwn(obj1, key)) {
-        const status = 'added';
-        const value = buildValue(value2);
-        return [...diff, { key, status, value }];
+        return [...diff, { key, status: 'added', value: buildValue(value2) }];
       }
       if (!Object.hasOwn(obj2, key)) {
-        const status = 'removed';
-        const value = buildValue(value1);
-        return [...diff, { key, status, value }];
+        return [...diff, { key, status: 'removed', value: buildValue(value1) }];
       }
       if (value1 !== value2) {
-        const status = 'changed';
-        const oldValue = buildValue(value1);
-        const newValue = buildValue(value2);
-        const value = { oldValue, newValue };
-        return [...diff, { key, status, value }];
+        return [
+          ...diff,
+          {
+            key,
+            status: 'changed',
+            value: {
+              oldValue: buildValue(value1),
+              newValue: buildValue(value2),
+            },
+          },
+        ];
       }
-      const status = 'unchanged';
-      const value = buildValue(value1);
-      return [...diff, { key, status, value }];
+      return [...diff, { key, status: 'unchanged', value: buildValue(value1) }];
     }, []);
   };
   return iter(firstObj, secondObj);
