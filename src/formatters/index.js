@@ -2,7 +2,7 @@ import stylish from './stylish.js';
 import plain from './plain.js';
 import json from './json.js';
 
-const formatting = (tree, formatName) => {
+const format = (tree, formatName) => {
   switch (formatName) {
     case 'stylish':
       return stylish(tree);
@@ -17,4 +17,4 @@ const formatting = (tree, formatName) => {
       throw Error(`${formatName} is not found`);
   }
 };
-export default formatting;
+export default format;
