@@ -1,31 +1,51 @@
+import _ from 'lodash';
+
 const sings = {
+  nested: '  ',
   added: '+ ',
   removed: '- ',
   unchanged: '  ',
-  nested: '  ',
-  undefined: '  ',
-  // underfined is then, if node is plain and doesnt have any status
 };
 
 const replacer = ' ';
 const startIndent = (depth) => replacer.repeat(4 * depth - 2);
 const endIndent = (depth) => replacer.repeat(4 * depth);
 
+const buildValue = (buildedValue, depth) => {
+  if (!_.isObject(buildedValue)) {
+    return buildedValue;
+  }
+  const entries = Object.entries(buildedValue);
+  const result = entries.map(([key, value]) => {
+    if (_.isObject(value)) {
+      return `${startIndent(depth + 1)}  ${key}: ${buildValue(value, depth + 1)}`;
+    }
+    return `${startIndent(depth + 1)}  ${key}: ${value}`;
+  });
+  return `{\n${result.join('\n')}\n${endIndent(depth)}}`;
+};
+
 const stylish = (tree) => {
   const iter = (node, depth = 1) => {
-    const result = node.reduce((diff, { key, status, value }) => {
-      const buildValue = (val) => (Array.isArray(val) ? `{${iter(val, depth + 1)}\n${endIndent(depth)}}` : val);
-      if (status === 'changed') {
-        return `${diff}\n${startIndent(depth)}${sings.removed}${key}: ${buildValue(value.oldValue)}\n${startIndent(depth)}${
-          sings.added
-        }${key}: ${buildValue(value.newValue)}`;
+    const result = node.map((obj) => {
+      switch (obj.status) {
+        case 'nested':
+          return `${startIndent(depth)}${sings[obj.status]}${obj.key}: {\n${iter(obj.children, depth + 1)}\n${endIndent(depth)}}`;
+        case 'changed':
+          return `${startIndent(depth)}${sings.removed}${obj.key}: ${buildValue(obj.oldValue, depth)}\n${startIndent(depth)}${sings.added}${
+            obj.key
+          }: ${buildValue(obj.value, depth)}`;
+        case 'added':
+        case 'removed':
+        case 'unchanged':
+          return `${startIndent(depth)}${sings[obj.status]}${obj.key}: ${buildValue(obj.value, depth)}`;
+        default:
+          throw new Error(`${obj.status} is not found`);
       }
-      return `${diff}\n${startIndent(depth)}${sings[status]}${key}: ${buildValue(value)}`;
-    }, '');
-    return result;
+    });
+    return result.join('\n');
   };
-
-  return `{${iter(tree)}\n}`;
+  return `{\n${iter(tree)}\n}`;
 };
 
 export default stylish;
