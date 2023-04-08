@@ -10,7 +10,7 @@ const parse = (data, type) => {
       return yaml.load(data);
 
     default:
-      throw new Error('data is not valid type');
+      throw new Error(`${data} has not valid type - ${type}`);
   }
 };
 
